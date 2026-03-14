@@ -1,0 +1,112 @@
+﻿@model ECommerce_WebSite.Areas.Admin.ViewModels.AdminOrderDetailsVM
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Order Details: <span class="text-primary">@Model.OrderNumber</span></h2>
+        <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to Orders</a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card box-shadow mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="bi bi-info-circle"></i> Order Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 mb-3">
+                            <span class="text-muted d-block">Order Date:</span>
+                            <strong>@Model.OrderDate.ToString("f")</strong>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <span class="text-muted d-block">Current Status:</span>
+                            <strong class="text-uppercase border px-2 py-1 rounded border-secondary">@Model.Status</strong>
+                        </div>
+                        <div class="col-sm-12">
+                            <span class="text-muted d-block">Shipping Address:</span>
+                            <div class="p-3 bg-light border rounded mt-1">
+                                <strong>Country:</strong> @Model.ShippingAddress.Country <br />
+                                <strong>City:</strong> @Model.ShippingAddress.City <br />
+                                <strong>Street:</strong> @Model.ShippingAddress.Street <br />
+                                <strong>ZIP Code:</strong> @Model.ShippingAddress.Zip
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card box-shadow mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0"><i class="bi bi-list-ul"></i> Order Items</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-striped mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Product ID</th>
+                                <th>Unit Price</th>
+                                <th>Quantity</th>
+                                <th class="text-end">Line Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <td class="align-middle">@item.ProductId</td>
+                                    <td class="align-middle">@item.UnitPrice.ToString("C")</td>
+                                    <td class="align-middle">x @item.Quantity</td>
+                                    <td class="align-middle text-end fw-bold">@item.LineTotal.ToString("C")</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot class="table-light">
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold fs-5">Grand Total:</td>
+                                <td class="text-end fw-bold fs-5 text-success">@Model.TotalAmount.ToString("C")</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card box-shadow border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-pencil-square"></i> Update Status</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="UpdateStatus" method="post">
+                        <input type="hidden" name="orderId" value="@Model.OrderId" />
+
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold">Select New Status</label>
+                            <select name="newStatus" class="form-select" asp-items="Html.GetEnumSelectList<Entities.Models.OrderStatus>()" asp-for="Status">
+                            </select>
+                        </div>
+
+                        <div class="alert alert-warning small">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            Note: If you change the status to <strong>Cancelled</strong>, the items' quantities will be automatically restored to the product stock.
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 fw-bold">Update Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

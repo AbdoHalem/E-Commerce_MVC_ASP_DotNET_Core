@@ -1,0 +1,77 @@
+﻿@model OrderDetailsVM
+@{
+	ViewData["Title"] = "Order " + Model.OrderNumber;
+}
+
+<div class="container mt-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">My Orders</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.OrderNumber</li>
+        </ol>
+    </nav>
+
+    <div class="card box-shadow mt-3">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Order Reference: @Model.OrderNumber</h4>
+            <span>Date: @Model.OrderDate.ToString("dd/MM/yyyy")</span>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5 class="text-primary border-bottom pb-2">Shipping Address</h5>
+                    @if (Model.ShippingAddress != null)
+                    {
+                        <p class="mb-1"><strong>Country/City:</strong> @Model.ShippingAddress.Country, @Model.ShippingAddress.City</p>
+                        <p class="mb-1"><strong>Street:</strong> @Model.ShippingAddress.Street</p>
+                        <p class="mb-0"><strong>ZIP Code:</strong> @Model.ShippingAddress.Zip</p>
+                    }
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-primary border-bottom pb-2">Order Status</h5>
+                    <p class="fs-5 mt-2">
+                        @if (Model.Status == OrderStatus.Pending)
+                        {
+                            <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split"></i> Pending Processing</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary"><i class="bi bi-check-circle"></i> @Model.Status.ToString()</span>
+                        }
+                    </p>
+                </div>
+            </div>
+
+            <h5 class="text-primary border-bottom pb-2 mb-3">Order Items</h5>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product Details</th>
+                            <th class="text-center">Unit Price</th>
+                            <th class="text-center">Quantity</th>
+                            <th class="text-end">Line Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>@item.Product?.Name</td>
+                                <td class="text-center">@item.UnitPrice.ToString("C")</td>
+                                <td class="text-center">@item.Quantity</td>
+                                <td class="text-end fw-bold">@item.LineTotal.ToString("C")</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold fs-5">Grand Total:</td>
+                            <td class="text-end fw-bold fs-4 text-success">@Model.TotalAmount.ToString("C")</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

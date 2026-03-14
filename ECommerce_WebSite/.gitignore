@@ -1,0 +1,55 @@
+# ==========================================
+# Visual Studio & .NET Core Ignore List
+# ==========================================
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio 2015/2017/2019/2022 cache/options directory
+.vs/
+/.vscode/
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Roslyn cache directories
+*.ide/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NUnit
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+# Build Info
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+
+# Mac / Linux hidden files
+.DS_Store
+Thumbs.db
+
+# User Secrets for .NET Core (Just in case)
+secrets.json

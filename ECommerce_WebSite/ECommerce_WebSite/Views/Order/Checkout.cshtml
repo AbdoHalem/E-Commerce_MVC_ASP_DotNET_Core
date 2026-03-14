@@ -1,0 +1,79 @@
+﻿@model CheckoutVM
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">Secure Checkout</h2>
+
+    <form asp-action="Checkout" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger fw-bold mb-3"></div>
+
+        <div class="row">
+            <div class="col-md-7 mb-4">
+                <div class="card box-shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Shipping Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group mb-3">
+                            <label asp-for="SelectedAddressId" class="form-label fw-bold">Select Delivery Address:</label>
+
+                            @if (Model.UserAddresses != null && Model.UserAddresses.Any())
+                            {
+                                <select asp-for="SelectedAddressId" class="form-select">
+                                    <option value="">-- Choose an Address --</option>
+                                    @foreach (var address in Model.UserAddresses)
+                                    {
+                                        <option value="@address.Id">@address.City, @address.Street (Zip: @address.Zip)</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="SelectedAddressId" class="text-danger"></span>
+                            }
+                            else
+                            {
+                                <div class="alert alert-warning">
+                                    You don't have any saved addresses. Please add an address to your profile first.
+                                    <a asp-controller="Address" asp-action="Create" asp-route-returnUrl="@Url.Action("Checkout", "Order")" class="btn btn-outline-primary btn-sm mt-2">
+                                        Add New Address
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="card box-shadow">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">Order Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush mb-3">
+                            @foreach (var item in Model.CartItems)
+                            {
+                                <li class="list-group-item d-flex justify-content-between lh-sm">
+                                    <div>
+                                        <h6 class="my-0">@item.ProductName</h6>
+                                        <small class="text-muted">Quantity: @item.Quantity</small>
+                                    </div>
+                                    <span class="text-muted">@item.LineTotal.ToString("C")</span>
+                                </li>
+                            }
+                            <li class="list-group-item d-flex justify-content-between bg-light mt-2">
+                                <span class="fw-bold fs-5">Total (EGP)</span>
+                                <strong class="fs-5 text-primary">@Model.TotalAmount.ToString("C")</strong>
+                            </li>
+                        </ul>
+
+                        <button type="submit" class="btn btn-success btn-lg w-100" @(Model.UserAddresses == null || !Model.UserAddresses.Any() ? "disabled" : "")>
+                            Confirm & Place Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
