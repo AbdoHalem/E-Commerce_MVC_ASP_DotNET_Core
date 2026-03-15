@@ -1,9 +1,19 @@
 ﻿@model RegisterVM
 @{
     ViewData["Title"] = "Register";
+    // Tell the Layout to hide the Navbar
+    ViewData["HideNavbar"] = true;
 }
 
 <div class="container mt-5">
+    <div class="row justify-content-center text-center mb-4">
+        <div class="col-12">
+            <a asp-controller="Catalog" asp-action="Index">
+                <img src="~/images/logo1.jpg" alt="Halem Store Logo" style="height: 80px; width: auto; mix-blend-mode: multiply; object-fit: contain;" />
+            </a>
+        </div>
+    </div>
+
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card box-shadow">

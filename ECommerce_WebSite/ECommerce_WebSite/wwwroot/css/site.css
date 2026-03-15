@@ -18,5 +18,19 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+/*    background-color: #f4f6f8;*/
 }
+
+/* 2. Premium Navbar Styling (Custom Shadow & Brand Top Border) */
+.premium-navbar {
+    border-top: 4px solid #ff7b00;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+    border-bottom: none !important;
+}
+
+
+/*.card {
+    background-color: #ffffff;
+    border: none;
+}*/
