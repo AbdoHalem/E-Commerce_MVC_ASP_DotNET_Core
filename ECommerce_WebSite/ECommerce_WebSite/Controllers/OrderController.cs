@@ -42,7 +42,8 @@ namespace ECommerce_WebSite.Controllers
             if (order == null || order.UserId != userId)
                 return NotFound();
 
-            var orderItems = _unitOfWork.orderItemRepo.FindAll(oi => oi.OrderId == id);
+            // Add include to the procut to enable Eager loading and avoid (N+1) problem of lazy loading
+            var orderItems = _unitOfWork.orderItemRepo.FindAll(oi => oi.OrderId == id, oi => oi.Product);
             var address = _unitOfWork.addressRepo.GetById(order.ShippingAddressId);
 
             var viewModel = new OrderDetailsVM
@@ -180,16 +181,15 @@ namespace ECommerce_WebSite.Controllers
                 order.Status = OrderStatus.Cancelled;
                 _unitOfWork.orderRepo.Update(order);
 
-                // 2. Restore the stock for each item in this order
-                var orderItems = _unitOfWork.orderItemRepo.FindAll(oi => oi.OrderId == id);
+                // 2. Restore the stock for each item in this order (using Eager Loading)
+                var orderItems = _unitOfWork.orderItemRepo.FindAll(oi => oi.OrderId == id, oi => oi.Product);
                 foreach (var item in orderItems)
                 {
-                    var product = _unitOfWork.productRepo.GetById(item.ProductId);
-                    if (product != null)
+                    if (item.Product != null)
                     {
                         // Add the quantity back to the inventory
-                        product.StockQuantity += item.Quantity;
-                        _unitOfWork.productRepo.Update(product);
+                        item.Product.StockQuantity += item.Quantity;
+                        _unitOfWork.productRepo.Update(item.Product);
                     }
                 }
                 // 3. Save all changes in one atomic transaction

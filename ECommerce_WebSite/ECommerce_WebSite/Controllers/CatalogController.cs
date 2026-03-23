@@ -86,14 +86,14 @@ namespace ECommerce_WebSite.Controllers
         public IActionResult Details(int id)
         {
             // Fetch the product by ID
-            var product = _unitOfWork.productRepo.GetById(id);
+            var product = _unitOfWork.productRepo
+                                     .FindAll(p => p.Id == id, p => p.Category)
+                                     .FirstOrDefault();
             // If product is not found or not active, return a 404 Not Found page
             if (product == null || !product.IsActive)
             {
                 return NotFound();
             }
-            // Fetch the category to get its name
-            var category = _unitOfWork.categoryRepo.GetById(product.CategoryId);
             
             // Map the Entity to the ViewModel
             var viewModel = new ProductDetailsVM
@@ -104,7 +104,8 @@ namespace ECommerce_WebSite.Controllers
                 Price = product.Price,
                 Description = product.Description,
                 StockQuantity = product.StockQuantity,
-                CategoryName = category != null ? category.Name : "Uncategorized",
+                // Eager Loading
+                CategoryName = product.Category != null ? product.Category.Name : "Uncategorized",
                 ImageUrl = product.ImageUrl
             };
             return View(viewModel);

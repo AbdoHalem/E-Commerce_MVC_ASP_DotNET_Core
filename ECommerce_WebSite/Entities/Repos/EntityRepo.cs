@@ -30,9 +30,18 @@ namespace Entities.Repos
             _set.Remove(GetById(id));
         }
 
-        public List<T> FindAll(Expression<Func<T, bool>> cond)
+        public List<T> FindAll(Expression<Func<T, bool>> cond, params Expression<Func<T, object>>[] includes)
         {
-            return _set.Where(cond).ToList();
+            IQueryable<T> query = _set.Where(cond);
+            // Add includes to the query to enable eager loading
+            if(includes != null)
+            {
+                foreach(var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+            return query.ToList();
         }
 
         public List<T> GetAll()

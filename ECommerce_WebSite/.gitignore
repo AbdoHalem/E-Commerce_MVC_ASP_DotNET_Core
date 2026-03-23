@@ -53,3 +53,6 @@ Thumbs.db
 
 # User Secrets for .NET Core (Just in case)
 secrets.json
+
+ECommerce_WebSite/.config/
+ECommerce_WebSite/Properties/PublishProfiles/
